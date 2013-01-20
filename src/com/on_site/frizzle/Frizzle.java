@@ -167,6 +167,17 @@ public class Frizzle {
         }
     }
 
+    public boolean contains(Element parent, Element child) {
+        enterContext();
+        try {
+            return (Boolean) Context.jsToJava(((Function) sizzle.get("contains", sizzle))
+                    .call(cx, toplevel, sizzle, new Object[] {toJS(parent), toJS(child)}),
+                    Boolean.class);
+        } finally {
+            exitContext();
+        }
+    }
+
     public String getText(Element elem) {
         enterContext();
         try {

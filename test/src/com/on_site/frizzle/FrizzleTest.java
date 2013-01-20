@@ -216,4 +216,18 @@ public class FrizzleTest {
     public void testMultiAttr() {
         assertAttr("p", "id", "hello", "goodbye");
     }
+
+    @Test
+    public void testContainsMiss() {
+        Element title = frizzle.select("title")[0];
+        Element body = frizzle.select("body")[0];
+        Assert.assertEquals(frizzle.contains(body, title), false);
+    }
+
+    @Test
+    public void testContainsHit() {
+        Element body = frizzle.select("body")[0];
+        Element p = frizzle.select("p")[0];
+        Assert.assertEquals(frizzle.contains(body, p), true);
+    }
 }
