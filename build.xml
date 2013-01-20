@@ -1,0 +1,100 @@
+<project name="frizzle" default="jar" basedir=".">
+  <property name="src" location="src" />
+  <property name="build" location="build" />
+  <property name="dist" location="dist" />
+  <property name="lib" location="lib" />
+  <property name="test.src" location="test/src" />
+  <property name="test.lib" location="test/lib" />
+  <property name="test.build" location="test/build" />
+  <property name="test.reports" location="test/reports" />
+  <property name="rhino.jar" location="${lib}/js.jar" />
+  <property name="guava.jar" location="${lib}/guava-14.0-rc1.jar" />
+  <property name="log4j.jar" location="${lib}/log4j-1.2.17.jar" />
+  <property name="testng.jar" location="${test.lib}/testng-6.8.jar" />
+
+  <path id="classpath">
+    <fileset dir="${lib}">
+      <include name="**/*.jar"/>
+    </fileset>
+  </path>
+
+  <path id="test.classpath">
+    <fileset dir="${lib}">
+      <include name="**/*.jar"/>
+    </fileset>
+
+    <fileset dir="${test.lib}">
+      <include name="**/*.jar"/>
+    </fileset>
+
+    <fileset dir="${dist}">
+      <include name="**/*.jar"/>
+    </fileset>
+
+    <pathelement location="${test.build}"/>
+  </path>
+
+  <target name="clean" description="clean up">
+    <delete dir="${build}" />
+    <delete dir="${test.build}" />
+    <delete dir="${dist}" />
+  </target>
+
+  <target name="init">
+    <mkdir dir="${build}" />
+    <mkdir dir="${dist}" />
+
+    <fail message="Missing ${rhino.jar}, please download it.">
+      <condition>
+        <not><available file="${rhino.jar}" /></not>
+      </condition>
+    </fail>
+
+    <fail message="Missing ${guava.jar}, please download it.">
+      <condition>
+        <not><available file="${guava.jar}" /></not>
+      </condition>
+    </fail>
+
+    <fail message="Missing ${log4j.jar}, please download it.">
+      <condition>
+        <not><available file="${log4j.jar}" /></not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="compile" depends="init">
+    <javac srcdir="${src}" destdir="${build}" classpathref="classpath" debug="true" />
+
+    <copy todir="${build}">
+      <fileset dir="${src}" includes="**/*.js" />
+    </copy>
+  </target>
+
+  <target name="jar" depends="compile">
+    <jar jarfile="${dist}/frizzle.jar" basedir="${build}" />
+  </target>
+
+  <target name="init-test" depends="init">
+    <mkdir dir="${test.build}" />
+
+    <fail message="Missing ${testng.jar}, please download it.">
+      <condition>
+        <not><available file="${testng.jar}" /></not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="compile-test" depends="init-test, jar">
+    <javac srcdir="${test.src}" destdir="${test.build}" classpathref="test.classpath" debug="true" />
+  </target>
+
+  <target name="test" depends="compile-test">
+    <taskdef resource="testngtasks" classpath="${testng.jar}"/>
+    <delete dir="${test.reports}" />
+
+    <testng classpathref="test.classpath" outputDir="${test.reports}" haltOnFailure="true" verbose="2">
+      <classfileset dir="${test.build}" includes="**/*Test.class" />
+    </testng>
+  </target>
+</project>

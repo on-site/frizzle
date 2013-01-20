@@ -1,0 +1,7 @@
+*~
+/build
+/dist
+/lib
+/test/reports
+/test/build
+/test/lib
