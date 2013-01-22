@@ -34,6 +34,7 @@
   <target name="clean" description="clean up">
     <delete dir="${build}" />
     <delete dir="${test.build}" />
+    <delete file="${frizzle.jar}" />
     <delete dir="${dist}" />
   </target>
 
