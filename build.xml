@@ -2,6 +2,7 @@
   <property name="src" location="src" />
   <property name="build" location="build" />
   <property name="dist" location="dist" />
+  <property name="frizzle.jar" location="${dist}/frizzle.jar" />
   <property name="lib" location="lib" />
   <property name="test.src" location="test/src" />
   <property name="test.lib" location="test/lib" />
@@ -16,24 +17,17 @@
   <property name="sizzle.destination" location="${build}/com/on_site/frizzle" />
 
   <path id="classpath">
-    <fileset dir="${lib}">
-      <include name="**/*.jar"/>
-    </fileset>
+    <pathelement location="${rhino.jar}" />
+    <pathelement location="${guava.jar}" />
+    <pathelement location="${log4j.jar}" />
   </path>
 
   <path id="test.classpath">
-    <fileset dir="${lib}">
-      <include name="**/*.jar"/>
-    </fileset>
-
-    <fileset dir="${test.lib}">
-      <include name="**/*.jar"/>
-    </fileset>
-
-    <fileset dir="${dist}">
-      <include name="**/*.jar"/>
-    </fileset>
-
+    <pathelement location="${rhino.jar}" />
+    <pathelement location="${guava.jar}" />
+    <pathelement location="${log4j.jar}" />
+    <pathelement location="${testng.jar}" />
+    <pathelement location="${frizzle.jar}" />
     <pathelement location="${test.build}"/>
   </path>
 
@@ -72,7 +66,7 @@
   </target>
 
   <target name="jar" depends="compile">
-    <jar jarfile="${dist}/frizzle.jar" basedir="${build}" />
+    <jar jarfile="${frizzle.jar}" basedir="${build}" />
   </target>
 
   <target name="init-test" depends="init">
