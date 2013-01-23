@@ -23,6 +23,9 @@
 
 package com.on_site.util;
 
+import java.io.InputStream;
+import java.io.Reader;
+
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -54,6 +57,20 @@ public final class DOMUtil {
 
     private DOMUtil() {
         /* Disable instantiation for static class. */
+    }
+
+    public static Document documentFromStream(InputStream xml) throws DOMException, LSException {
+        LSInput input = LS.createLSInput();
+        input.setByteStream(xml);
+        LSParser parser = LS.createLSParser(DOMImplementationLS.MODE_SYNCHRONOUS, null);
+        return parser.parse(input);
+    }
+
+    public static Document documentFromReader(Reader xml) throws DOMException, LSException {
+        LSInput input = LS.createLSInput();
+        input.setCharacterStream(xml);
+        LSParser parser = LS.createLSParser(DOMImplementationLS.MODE_SYNCHRONOUS, null);
+        return parser.parse(input);
     }
 
     public static Document documentFromString(String xml) throws DOMException,
