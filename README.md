@@ -43,7 +43,6 @@ Additionally, this project requires the following libraries:
 
 * [Rhino][rhino]
 * [Guava][guava]
-* [Log4j][log4j]
 
 The tests use [TestNG][testng].
 
@@ -70,7 +69,6 @@ All the code is licensed under the same terms as Sizzle itself.
 [slow-xpath]: http://blog.astradele.com/2006/02/24/slow-xpath-evaluation-for-large-xml-documents-in-java-15/
 [rhino]: http://www.mozilla.org/rhino/
 [guava]: http://code.google.com/p/guava-libraries/
-[log4j]: http://logging.apache.org/log4j/1.2/
 [testng]: http://www.testng.org/
 [nashorn]: http://openjdk.java.net/projects/nashorn/
 [cky]: http://github.com/cky

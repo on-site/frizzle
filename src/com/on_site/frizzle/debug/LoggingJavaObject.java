@@ -24,7 +24,6 @@
 package com.on_site.frizzle.debug;
 
 import com.google.common.base.Objects;
-import org.apache.log4j.Logger;
 import org.mozilla.javascript.NativeJavaObject;
 import org.mozilla.javascript.Scriptable;
 
@@ -83,12 +82,11 @@ public class LoggingJavaObject extends NativeJavaObject {
         }
     }
 
-    private static final Logger LOGGER = Logger.getLogger(LoggingJavaObject.class);
     private final LoggingMixin mixin;
 
     private void logConstruct(Object javaObject, Class<?> staticType) {
-        LOGGER.info(String.format("%s.<init>([%s]%s)", this,
-                staticType == null ? "?" : staticType.getName(), javaObject));
+        LoggingMixin.log("{0}.<init>([{1}]{2})", this,
+                staticType == null ? "?" : staticType.getName(), javaObject);
     }
 
     public LoggingJavaObject(Scriptable scope, Object javaObject, Class<?> staticType) {
@@ -105,7 +103,7 @@ public class LoggingJavaObject extends NativeJavaObject {
     }
 
     private LoggingMixin createMixin() {
-        return new LoggingMixin(new Delegate(), LOGGER);
+        return new LoggingMixin(new Delegate());
     }
 
     @Override

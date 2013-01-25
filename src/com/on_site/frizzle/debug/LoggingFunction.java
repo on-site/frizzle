@@ -29,7 +29,6 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
-import org.apache.log4j.Logger;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.Scriptable;
@@ -89,7 +88,6 @@ public class LoggingFunction extends ForwardingFunction {
         }
     }
 
-    private static final Logger LOGGER = Logger.getLogger(LoggingFunction.class);
     private final String name;
     private final Function func;
     private final LoggingMixin mixin;
@@ -101,7 +99,7 @@ public class LoggingFunction extends ForwardingFunction {
     }
 
     private LoggingMixin createMixin() {
-        return new LoggingMixin(new Delegate(), LOGGER);
+        return new LoggingMixin(new Delegate());
     }
 
     @Override
@@ -159,11 +157,10 @@ public class LoggingFunction extends ForwardingFunction {
         } finally {
             String lhs = thisObj == null ? name : thisObj + name;
             if (value == null) {
-                LOGGER.info(String.format("%s(%s) => abrupt", lhs,
-                        printableArgs(args)));
+                LoggingMixin.log("{0}({1}) => abrupt", lhs, printableArgs(args));
             } else {
-                LOGGER.info(String.format("%s(%s) => %s", lhs,
-                        printableArgs(args), value.orNull()));
+                LoggingMixin.log("{0}({1}) => {2}", lhs, printableArgs(args),
+                        value.orNull());
             }
         }
     }
@@ -177,11 +174,10 @@ public class LoggingFunction extends ForwardingFunction {
             return LoggingMixin.instrument(Scriptable.class, "new " + name + "()", value);
         } finally {
             if (value == null) {
-                LOGGER.info(String.format("new %s(%s) => abrupt", name,
-                        printableArgs(args)));
+                LoggingMixin.log("new {0}({1}) => abrupt", name, printableArgs(args));
             } else {
-                LOGGER.info(String.format("new %s(%s) => %s", name,
-                        printableArgs(args), value.orNull()));
+                LoggingMixin.log("new {0}({1}) => {2}", name, printableArgs(args),
+                        value.orNull());
             }
         }
     }

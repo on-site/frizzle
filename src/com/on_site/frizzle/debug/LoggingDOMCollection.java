@@ -25,7 +25,6 @@ package com.on_site.frizzle.debug;
 
 import com.google.common.base.Objects;
 import com.on_site.frizzle.NativeDOMCollection;
-import org.apache.log4j.Logger;
 import org.mozilla.javascript.Scriptable;
 import org.w3c.dom.DOMImplementationList;
 import org.w3c.dom.DOMStringList;
@@ -87,11 +86,11 @@ public class LoggingDOMCollection extends NativeDOMCollection {
         }
     }
 
-    private static final Logger LOGGER = Logger.getLogger(LoggingDOMCollection.class);
     private final LoggingMixin mixin;
 
     private void logConstruct(Class<?> collClass) {
-        LOGGER.info(String.format("%s.<init>([%s]%s)", this, collClass.getName(), getCollection()));
+        LoggingMixin.log("{0}.<init>([{1}]{2})", this, collClass.getName(),
+                getCollection());
     }
 
     public LoggingDOMCollection(Scriptable scope, DOMStringList list) {
@@ -119,7 +118,7 @@ public class LoggingDOMCollection extends NativeDOMCollection {
     }
 
     private LoggingMixin createMixin() {
-        return new LoggingMixin(new Delegate(), LOGGER);
+        return new LoggingMixin(new Delegate());
     }
 
     @Override

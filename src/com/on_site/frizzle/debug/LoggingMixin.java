@@ -23,9 +23,11 @@
 
 package com.on_site.frizzle.debug;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
-import org.apache.log4j.Logger;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.Scriptable;
 
@@ -36,6 +38,8 @@ import org.mozilla.javascript.Scriptable;
  * @author Chris K. Jester-Young
  */
 class LoggingMixin {
+    private static final Logger LOGGER = Logger.getLogger("com.on_site.frizzle");
+
     public interface Delegate {
         boolean has(String name, Scriptable start);
         boolean has(int index, Scriptable start);
@@ -48,11 +52,27 @@ class LoggingMixin {
     }
 
     private final Delegate delegate;
-    private final Logger logger;
 
-    public LoggingMixin(Delegate delegate, Logger logger) {
+    public static void log(String format, Object... args) {
+        /*
+         * Grab the calling class and method (excluding anything from
+         * this class); otherwise the log will always show this method,
+         * which is silly.
+         */
+        String callingClass = null;
+        String callingMethod = null;
+        for (StackTraceElement frame : new Throwable().getStackTrace()) {
+            if (frame.getClassName() != LoggingMixin.class.getName()) {
+                callingClass = frame.getClassName();
+                callingMethod = frame.getMethodName();
+                break;
+            }
+        }
+        LOGGER.logp(Level.INFO, callingClass, callingMethod, format, args);
+    }
+
+    public LoggingMixin(Delegate delegate) {
         this.delegate = delegate;
-        this.logger = logger;
     }
 
     public boolean has(String name, Scriptable start) {
@@ -61,9 +81,9 @@ class LoggingMixin {
             return value = delegate.has(name, start);
         } finally {
             if (value == null) {
-                logger.info(String.format("\"%s\" in %s => abrupt", name, start));
+                log("\"{0}\" in {1} => abrupt", name, start);
             } else {
-                logger.info(String.format("\"%s\" in %s => %s", name, start, value));
+                log("\"{0}\" in {1} => {2}", name, start, value);
             }
         }
     }
@@ -74,9 +94,9 @@ class LoggingMixin {
             return value = delegate.has(index, start);
         } finally {
             if (value == null) {
-                logger.info(String.format("%d in %s => abrupt", index, start));
+                log("{0} in {1} => abrupt", index, start);
             } else {
-                logger.info(String.format("%d in %s => %s", index, start, value));
+                log("{0} in {1} => {2}", index, start, value);
             }
         }
     }
@@ -88,10 +108,10 @@ class LoggingMixin {
             return instrument(Object.class, "." + name, value);
         } finally {
             if (value == null) {
-                logger.info(String.format("%s.%s => abrupt", start, name));
+                log("{1}.{0} => abrupt", name, start);
             } else {
                 if (!(value.orNull() instanceof Function)) {
-                    logger.info(String.format("%s.%s => %s", start, name, value.orNull()));
+                    log("{1}.{0} => {2}", name, start, value.orNull());
                 }
             }
         }
@@ -104,32 +124,32 @@ class LoggingMixin {
             return instrument(Object.class, "[" + index + "]", value);
         } finally {
             if (value == null) {
-                logger.info(String.format("%s[%d] => abrupt", start, index));
+                log("{1}[{0}] => abrupt", index, start);
             } else {
                 if (!(value.orNull() instanceof Function)) {
-                    logger.info(String.format("%s[%d] => %s", start, index, value.orNull()));
+                    log("{1}[{0}] => {2}", index, start, value.orNull());
                 }
             }
         }
     }
 
     public void put(String name, Scriptable start, Object value) {
-        logger.info(String.format("%s.%s = %s", start, name, value));
+        log("{1}.{0} = {2}", name, start, value);
         delegate.put(name, start, value);
     }
 
     public void put(int index, Scriptable start, Object value) {
-        logger.info(String.format("%s[%d] = %s", start, index, value));
+        log("{1}[{0}] = {2}", index, start, value);
         delegate.put(index, start, value);
     }
 
     public void delete(String name) {
-        logger.info(String.format("delete %s.%s", this, name));
+        log("delete {1}.{0}", name, this);
         delegate.delete(name);
     }
 
     public void delete(int index) {
-        logger.info(String.format("delete %s[%d]", this, index));
+        log("delete {1}[{0}]", index, this);
         delegate.delete(index);
     }
 
@@ -145,7 +165,6 @@ class LoggingMixin {
     public String toString() {
         return Objects.toStringHelper(this)
                 .add("delegate", delegate)
-                .add("logger", logger)
                 .toString();
     }
 }

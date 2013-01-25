@@ -37,7 +37,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class DOMWrapFactory extends WrapFactory {
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = Boolean.getBoolean("com.on_site.frizzle.debug");
 
     public DOMWrapFactory() {
         setJavaPrimitiveWrap(false);
