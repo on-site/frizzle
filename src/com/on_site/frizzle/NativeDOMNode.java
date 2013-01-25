@@ -109,7 +109,7 @@ public class NativeDOMNode extends NativeDOMCommon {
         for (Node node : new NodeListIterable(elem.getChildNodes())) {
             frag.appendChild(node.cloneNode(false));
         }
-        return DOMUtil.stringFromNode(frag).replaceFirst("<\\?.*?>", "");
+        return DOMUtil.stringFromNode(frag);
     }
 
     private void setInnerHtml(String value) {

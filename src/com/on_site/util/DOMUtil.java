@@ -26,6 +26,7 @@ package com.on_site.util;
 import java.io.InputStream;
 import java.io.Reader;
 
+import org.w3c.dom.DOMConfiguration;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -59,31 +60,44 @@ public final class DOMUtil {
         /* Disable instantiation for static class. */
     }
 
-    public static Document documentFromStream(InputStream xml) throws DOMException, LSException {
-        LSInput input = LS.createLSInput();
-        input.setByteStream(xml);
+    public static Document documentFromLSInput(LSInput input) throws DOMException,
+            LSException {
         LSParser parser = LS.createLSParser(DOMImplementationLS.MODE_SYNCHRONOUS, null);
         return parser.parse(input);
     }
 
-    public static Document documentFromReader(Reader xml) throws DOMException, LSException {
+    public static Document documentFromStream(InputStream xml) throws DOMException,
+            LSException {
+        LSInput input = LS.createLSInput();
+        input.setByteStream(xml);
+        return documentFromLSInput(input);
+    }
+
+    public static Document documentFromReader(Reader xml) throws DOMException,
+            LSException {
         LSInput input = LS.createLSInput();
         input.setCharacterStream(xml);
-        LSParser parser = LS.createLSParser(DOMImplementationLS.MODE_SYNCHRONOUS, null);
-        return parser.parse(input);
+        return documentFromLSInput(input);
     }
 
     public static Document documentFromString(String xml) throws DOMException,
             LSException {
         LSInput input = LS.createLSInput();
         input.setStringData(xml);
-        LSParser parser = LS.createLSParser(DOMImplementationLS.MODE_SYNCHRONOUS, null);
-        return parser.parse(input);
+        return documentFromLSInput(input);
     }
 
     public static String stringFromNode(Node node) throws DOMException,
             LSException {
+        return stringFromNode(node, false);
+    }
+
+    public static String stringFromNode(Node node, boolean pretty)
+            throws DOMException, LSException {
         LSSerializer serial = LS.createLSSerializer();
+        DOMConfiguration domConfig = serial.getDomConfig();
+        domConfig.setParameter("xml-declaration", Boolean.FALSE);
+        domConfig.setParameter("format-pretty-print", pretty);
         return serial.writeToString(node);
     }
 }
