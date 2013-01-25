@@ -10,6 +10,7 @@
   <property name="test.reports" location="test/reports" />
   <property name="rhino.jar" location="${lib}/js.jar" />
   <property name="guava.jar" location="${lib}/guava-14.0-rc1.jar" />
+  <property name="log4j.jar" location="${lib}/log4j-1.2.17.jar" />
   <property name="testng.jar" location="${test.lib}/testng-6.8.jar" />
   <property name="sizzle.repo" location="sizzle" />
   <property name="sizzle.location" location="${sizzle.repo}/sizzle.js" />
@@ -18,11 +19,13 @@
   <path id="classpath">
     <pathelement location="${rhino.jar}" />
     <pathelement location="${guava.jar}" />
+    <pathelement location="${log4j.jar}" />
   </path>
 
   <path id="test.classpath">
     <pathelement location="${rhino.jar}" />
     <pathelement location="${guava.jar}" />
+    <pathelement location="${log4j.jar}" />
     <pathelement location="${testng.jar}" />
     <pathelement location="${frizzle.jar}" />
     <pathelement location="${test.build}"/>
@@ -48,6 +51,12 @@
     <fail message="Missing ${guava.jar}, please download it.">
       <condition>
         <not><available file="${guava.jar}" /></not>
+      </condition>
+    </fail>
+
+    <fail message="Missing ${log4j.jar}, please download it.">
+      <condition>
+        <not><available file="${log4j.jar}" /></not>
       </condition>
     </fail>
   </target>

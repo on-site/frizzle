@@ -25,6 +25,7 @@ package com.on_site.frizzle.debug;
 
 import com.google.common.base.Objects;
 import com.on_site.frizzle.NativeDOMNode;
+import org.apache.log4j.Logger;
 import org.mozilla.javascript.Scriptable;
 import org.w3c.dom.Node;
 

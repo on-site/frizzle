@@ -25,6 +25,7 @@ package com.on_site.frizzle.debug;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
+import org.apache.log4j.Logger;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.Scriptable;
 
