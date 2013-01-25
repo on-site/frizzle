@@ -43,7 +43,9 @@ Additionally, this project requires the following libraries:
 
 * [Rhino][rhino]
 * [Guava][guava]
-* [Log4j][log4j]
+
+If [Log4j][log4j] is available, it will be used, but it is not
+required.
 
 The tests use [TestNG][testng].
 
