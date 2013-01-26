@@ -1,5 +1,7 @@
 package com.on_site.frizzle;
 
+import com.google.common.base.Predicate;
+
 import org.mozilla.javascript.BaseFunction;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Scriptable;
@@ -15,19 +17,18 @@ import org.w3c.dom.Element;
 public abstract class Pseudo {
     /**
      * This method implements the logic of the pseudo selector.  It is
-     * called with each element along with the argument passed to the
-     * selector (if one was given).
+     * first called with the argument passed to the selector (or null
+     * if none was given).  The predicate returned is then called with
+     * each element and used to determine which element to keep.
      *
-     * @param element The element being processed against this pseudo
-     * selector.
      * @param argument The argument passed to the pseudo selector, or
      * null if none was supplied.
-     * @return Whether or not the selector should apply to the given
-     * element.
+     * @return A predicate used to determine which element should be
+     * selected by this pseudo selector.
      */
-    public abstract boolean apply(Element element, String argument);
+    public abstract Predicate<Element> apply(String argument);
 
-    protected BaseFunction toJS() {
+    BaseFunction toJS() {
         return new Outer();
     }
 
@@ -43,21 +44,21 @@ public abstract class Pseudo {
                 arg = (String) args[0];
             }
 
-            return new Inner(arg);
+            return new Inner(apply(arg));
         }
     }
 
     private class Inner extends BaseFunction {
-        private final String argument;
+        private final Predicate<Element> predicate;
 
-        private Inner(String argument) {
-            this.argument = argument;
+        private Inner(Predicate<Element> predicate) {
+            this.predicate = predicate;
         }
 
         @Override
         public Object call(Context cx, Scriptable scope, Scriptable thisObj, Object[] args) {
             Element element = (Element) Context.jsToJava(args[0], Element.class);
-            return apply(element, argument);
+            return predicate.apply(element);
         }
     }
 }
