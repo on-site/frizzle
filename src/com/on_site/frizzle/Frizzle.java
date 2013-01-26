@@ -29,7 +29,11 @@ import java.io.Reader;
 import java.net.URL;
 
 import com.google.common.base.Charsets;
+import com.google.common.collect.Sets;
 import com.google.common.io.Closeables;
+
+import java.util.Set;
+
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.Script;
@@ -48,6 +52,7 @@ import org.w3c.dom.NodeList;
 public class Frizzle {
     private static final Script SIZZLE_SCRIPT = compileSizzle();
 
+    private final Set<String> pseudos = Sets.newHashSet();
     private final Scriptable toplevel;
     private final Function sizzle;
     private Context cx;
@@ -105,9 +110,14 @@ public class Frizzle {
             Object object = createPseudo.call(cx, toplevel, selectors, new Object[] { pseudo.toJS() });
             Scriptable pseudos = (Scriptable) selectors.get("pseudos", selectors);
             pseudos.put(name, pseudos, object);
+            this.pseudos.add(name);
         } finally {
             exitContext();
         }
+    }
+
+    public boolean hasPseudo(String name) {
+        return pseudos.contains(name);
     }
 
     public Element[] select(String selector) {
