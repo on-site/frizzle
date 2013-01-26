@@ -97,6 +97,19 @@ public class Frizzle {
         }
     }
 
+    public void createPseudo(String name, Pseudo pseudo) {
+        enterContext();
+        try {
+            Scriptable selectors = (Scriptable) sizzle.get("selectors", sizzle);
+            Function createPseudo = (Function) selectors.get("createPseudo", selectors);
+            Object object = createPseudo.call(cx, toplevel, selectors, new Object[] { pseudo.toJS() });
+            Scriptable pseudos = (Scriptable) selectors.get("pseudos", selectors);
+            pseudos.put(name, pseudos, object);
+        } finally {
+            exitContext();
+        }
+    }
+
     public Element[] select(String selector) {
         enterContext();
         try {
