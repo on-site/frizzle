@@ -23,8 +23,11 @@
 
 package com.on_site.util;
 
+import com.google.common.collect.ImmutableMap;
+
 import java.io.InputStream;
 import java.io.Reader;
+import java.util.Map;
 
 import org.w3c.dom.DOMConfiguration;
 import org.w3c.dom.DOMException;
@@ -62,29 +65,50 @@ public final class DOMUtil {
 
     public static Document documentFromLSInput(LSInput input) throws DOMException,
             LSException {
+        return documentFromLSInput(input, null);
+    }
+
+    public static Document documentFromLSInput(LSInput input, Map<String, ?> config) throws DOMException,
+            LSException {
         LSParser parser = LS.createLSParser(DOMImplementationLS.MODE_SYNCHRONOUS, null);
+        setupConfig(parser.getDomConfig(), config);
         return parser.parse(input);
     }
 
     public static Document documentFromStream(InputStream xml) throws DOMException,
             LSException {
+        return documentFromStream(xml, null);
+    }
+
+    public static Document documentFromStream(InputStream xml, Map<String, ?> config) throws DOMException,
+            LSException {
         LSInput input = LS.createLSInput();
         input.setByteStream(xml);
-        return documentFromLSInput(input);
+        return documentFromLSInput(input, config);
     }
 
     public static Document documentFromReader(Reader xml) throws DOMException,
             LSException {
+        return documentFromReader(xml, null);
+    }
+
+    public static Document documentFromReader(Reader xml, Map<String, ?> config) throws DOMException,
+            LSException {
         LSInput input = LS.createLSInput();
         input.setCharacterStream(xml);
-        return documentFromLSInput(input);
+        return documentFromLSInput(input, config);
     }
 
     public static Document documentFromString(String xml) throws DOMException,
             LSException {
+        return documentFromString(xml, null);
+    }
+
+    public static Document documentFromString(String xml, Map<String, ?> config) throws DOMException,
+            LSException {
         LSInput input = LS.createLSInput();
         input.setStringData(xml);
-        return documentFromLSInput(input);
+        return documentFromLSInput(input, config);
     }
 
     public static String stringFromNode(Node node) throws DOMException,
@@ -94,10 +118,23 @@ public final class DOMUtil {
 
     public static String stringFromNode(Node node, boolean pretty)
             throws DOMException, LSException {
+        return stringFromNode(node, ImmutableMap.of("xml-declaration", Boolean.FALSE, "format-pretty-print", pretty));
+    }
+
+    public static String stringFromNode(Node node, Map<String, ?> config)
+            throws DOMException, LSException {
         LSSerializer serial = LS.createLSSerializer();
-        DOMConfiguration domConfig = serial.getDomConfig();
-        domConfig.setParameter("xml-declaration", Boolean.FALSE);
-        domConfig.setParameter("format-pretty-print", pretty);
+        setupConfig(serial.getDomConfig(), config);
         return serial.writeToString(node);
+    }
+
+    private static void setupConfig(DOMConfiguration domConfig, Map<String, ?> config) {
+        if (config == null) {
+            return;
+        }
+
+        for (Map.Entry<String, ?> entry : config.entrySet()) {
+            domConfig.setParameter(entry.getKey(), entry.getValue());
+        }
     }
 }
