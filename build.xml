@@ -53,7 +53,9 @@
   </target>
 
   <target name="compile" depends="init">
-    <javac srcdir="${src}" destdir="${build}" classpathref="classpath" debug="true" />
+    <javac srcdir="${src}" destdir="${build}"
+           includeantruntime="true"
+           classpathref="classpath" debug="true" />
     <copy file="${sizzle.location}" todir="${sizzle.destination}" />
   </target>
 
