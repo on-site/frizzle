@@ -30,7 +30,8 @@ import java.net.URL;
 
 import com.google.common.base.Charsets;
 import com.google.common.collect.Sets;
-import com.google.common.io.Closeables;
+import com.google.common.io.Closer;
+import com.on_site.util.ContextCloseable;
 
 import java.util.Set;
 
@@ -59,17 +60,21 @@ public class Frizzle {
     private WrapFactory savedFactory;
 
     private static Script compileSizzle() {
-        Context cx = Context.enter();
-        Reader in = null;
         try {
-            URL sizzlejs = Frizzle.class.getResource("sizzle.js");
-            in = new InputStreamReader(sizzlejs.openStream(), Charsets.UTF_8);
-            return cx.compileReader(in, sizzlejs.toString(), 1, null);
+            Closer closer = Closer.create();
+            try {
+                Context cx = closer.register(new ContextCloseable()).getContext();
+                URL sizzlejs = Frizzle.class.getResource("sizzle.js");
+                Reader in = closer.register(new InputStreamReader(
+                        sizzlejs.openStream(), Charsets.UTF_8));
+                return cx.compileReader(in, sizzlejs.toString(), 1, null);
+            } catch (Throwable t) {
+                throw closer.rethrow(t);
+            } finally {
+                closer.close();
+            }
         } catch (IOException e) {
             throw new AssertionError(e);
-        } finally {
-            Closeables.closeQuietly(in);
-            Context.exit();
         }
     }
 
