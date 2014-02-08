@@ -8,8 +8,9 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="com.google.guava:guava:13.0.1" level="application" />
-    <orderEntry type="library" name="org.mozilla:rhino:1.7R4" level="application" />
-    <orderEntry type="library" scope="TEST" name="org.testng:testng:6.8" level="application" />
+    <orderEntry type="library" name="com.google.guava:guava:16.0.1" level="project" />
+    <orderEntry type="library" name="org.mozilla:rhino:1.7R4" level="project" />
+    <orderEntry type="library" scope="TEST" name="org.testng:testng:6.8.7" level="project" />
   </component>
 </module>
+
