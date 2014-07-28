@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2014 On-Site.com.
+ * Copyright (c) 2014 On-Site.com.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -21,30 +21,29 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.on_site.util;
+package com.on_site.frizzle;
 
-import java.io.Closeable;
+import org.mozilla.javascript.WrapFactory;
 
-import org.mozilla.javascript.Context;
+import com.on_site.util.ContextCloseable;
 
 /**
- * "RAII" wrapper for {@link Context}.
+ * A {@link ContextCloseable} implmentation that also sets the context
+ * up with {@link DOMWrapFactory}.
  *
- * @author Chris K. Jester-Young
+ * @author Chris Jester-Young
  */
-public class ContextCloseable implements Closeable {
-    protected final Context cx;
+public class WrappedContextCloseable extends ContextCloseable {
+    private final WrapFactory savedFactory;
 
-    public ContextCloseable() {
-        cx = Context.enter();
+    public WrappedContextCloseable() {
+        savedFactory = cx.getWrapFactory();
+        cx.setWrapFactory(new DOMWrapFactory());
     }
 
     @Override
     public void close() {
-        Context.exit();
-    }
-
-    public Context getContext() {
-        return cx;
+        cx.setWrapFactory(savedFactory);
+        super.close();
     }
 }
