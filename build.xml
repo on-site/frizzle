@@ -8,9 +8,9 @@
   <property name="test.lib" location="test/lib" />
   <property name="test.build" location="test/build" />
   <property name="test.reports" location="test/reports" />
-  <property name="rhino.jar" location="${lib}/rhino-1.7R4.jar" />
-  <property name="guava.jar" location="${lib}/guava-17.0.jar" />
-  <property name="testng.jar" location="${test.lib}/testng-6.8.8.jar" />
+  <property name="rhino.jar" location="${lib}/rhino-1.7.7.1.jar" />
+  <property name="guava.jar" location="${lib}/guava-19.0.jar" />
+  <property name="testng.jar" location="${test.lib}/testng-6.9.10.jar" />
   <property name="sizzle.repo" location="sizzle" />
   <property name="sizzle.location" location="${sizzle.repo}/dist/sizzle.js" />
   <property name="sizzle.destination" location="${build}/com/on_site/frizzle" />
