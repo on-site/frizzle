@@ -23,7 +23,7 @@
 
 package com.on_site.frizzle.debug;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import com.on_site.frizzle.NativeDOMNode;
 import org.mozilla.javascript.Scriptable;
 import org.w3c.dom.Node;
@@ -77,7 +77,7 @@ public class LoggingDOMNode extends NativeDOMNode {
 
         @Override
         public String toString() {
-            return Objects.toStringHelper(this)
+            return MoreObjects.toStringHelper(this)
                     .add("this", LoggingDOMNode.this)
                     .toString();
         }

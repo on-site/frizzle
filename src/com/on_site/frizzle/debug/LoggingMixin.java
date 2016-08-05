@@ -26,7 +26,7 @@ package com.on_site.frizzle.debug;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.Scriptable;
@@ -163,7 +163,7 @@ class LoggingMixin {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
+        return MoreObjects.toStringHelper(this)
                 .add("delegate", delegate)
                 .toString();
     }

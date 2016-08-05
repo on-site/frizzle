@@ -26,7 +26,7 @@ package com.on_site.frizzle.debug;
 import java.util.Arrays;
 
 import com.google.common.base.Joiner;
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import org.mozilla.javascript.Context;
@@ -82,7 +82,7 @@ public class LoggingFunction extends ForwardingFunction {
 
         @Override
         public String toString() {
-            return Objects.toStringHelper(this)
+            return MoreObjects.toStringHelper(this)
                     .add("this", LoggingFunction.this)
                     .toString();
         }

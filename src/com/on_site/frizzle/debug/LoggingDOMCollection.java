@@ -23,7 +23,7 @@
 
 package com.on_site.frizzle.debug;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import com.on_site.frizzle.NativeDOMCollection;
 import org.mozilla.javascript.Scriptable;
 import org.w3c.dom.DOMImplementationList;
@@ -80,7 +80,7 @@ public class LoggingDOMCollection extends NativeDOMCollection {
 
         @Override
         public String toString() {
-            return Objects.toStringHelper(this)
+            return MoreObjects.toStringHelper(this)
                     .add("this", LoggingDOMCollection.this)
                     .toString();
         }

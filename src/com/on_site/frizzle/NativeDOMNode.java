@@ -23,7 +23,7 @@
 
 package com.on_site.frizzle;
 
-import com.google.common.base.Objects.ToStringHelper;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.collect.ImmutableMap;
 import com.on_site.util.DOMUtil;
 import com.on_site.util.NodeListIterable;

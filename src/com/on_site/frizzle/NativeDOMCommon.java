@@ -25,8 +25,8 @@ package com.on_site.frizzle;
 
 import java.util.List;
 
-import com.google.common.base.Objects;
-import com.google.common.base.Objects.ToStringHelper;
+import com.google.common.base.MoreObjects;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.NativeJavaObject;
 import org.mozilla.javascript.Scriptable;
@@ -71,7 +71,7 @@ public abstract class NativeDOMCommon extends NativeJavaObject {
     }
 
     protected ToStringHelper getToStringHelper() {
-        return Objects.toStringHelper(this)
+        return MoreObjects.toStringHelper(this)
                 .omitNullValues()
                 .add("javaObject", javaObject)
                 .add("staticType", staticType.getSimpleName())

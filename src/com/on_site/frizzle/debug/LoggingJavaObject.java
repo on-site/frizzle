@@ -23,7 +23,7 @@
 
 package com.on_site.frizzle.debug;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import org.mozilla.javascript.NativeJavaObject;
 import org.mozilla.javascript.Scriptable;
 
@@ -76,7 +76,7 @@ public class LoggingJavaObject extends NativeJavaObject {
 
         @Override
         public String toString() {
-            return Objects.toStringHelper(this)
+            return MoreObjects.toStringHelper(this)
                     .add("this", LoggingJavaObject.this)
                     .toString();
         }
@@ -148,7 +148,7 @@ public class LoggingJavaObject extends NativeJavaObject {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
+        return MoreObjects.toStringHelper(this)
                 .add("javaObject", javaObject)
                 .toString();
     }
