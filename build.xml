@@ -1,18 +1,20 @@
 <project name="frizzle" default="jar" basedir=".">
-  <property name="src" location="src" />
+  <property name="src" location="src/main/java" />
+  <property name="resources" location="src/main/resources" />
   <property name="build" location="build" />
   <property name="dist" location="dist" />
   <property name="frizzle.jar" location="${dist}/frizzle.jar" />
   <property name="lib" location="lib" />
-  <property name="test.src" location="test/src" />
+  <property name="test.src" location="src/test/java" />
   <property name="test.lib" location="test/lib" />
   <property name="test.build" location="test/build" />
   <property name="test.reports" location="test/reports" />
   <property name="rhino.jar" location="${lib}/rhino-1.7.7.1.jar" />
   <property name="guava.jar" location="${lib}/guava-19.0.jar" />
   <property name="testng.jar" location="${test.lib}/testng-6.9.10.jar" />
+  <property name="jcommander.jar" location="${test.lib}/jcommander-1.48.jar" />
   <property name="sizzle.repo" location="sizzle" />
-  <property name="sizzle.location" location="${sizzle.repo}/dist/sizzle.js" />
+  <property name="sizzle.location" location="${resources}/com/on_site/frizzle/sizzle.js" />
   <property name="sizzle.destination" location="${build}/com/on_site/frizzle" />
 
   <path id="classpath">
@@ -24,6 +26,7 @@
     <pathelement location="${rhino.jar}" />
     <pathelement location="${guava.jar}" />
     <pathelement location="${testng.jar}" />
+    <pathelement location="${jcommander.jar}" />
     <pathelement location="${frizzle.jar}" />
     <pathelement location="${test.build}"/>
   </path>
@@ -69,6 +72,12 @@
     <fail message="Missing ${testng.jar}, please download it.">
       <condition>
         <not><available file="${testng.jar}" /></not>
+      </condition>
+    </fail>
+
+    <fail message="Missing ${jcommander.jar}, please download it.">
+      <condition>
+        <not><available file="${jcommander.jar}" /></not>
       </condition>
     </fail>
   </target>
