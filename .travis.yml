@@ -2,4 +2,5 @@ language: java
 jdk:
 - openjdk7
 script:
-- ant test
+- ./configure_pom
+- mvn package
