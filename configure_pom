@@ -3,9 +3,9 @@ require "open3"
 
 def version
   output, status = Open3.capture2e("git describe --abbrev=0 --tags")
-  return "UNKNOWN-SNAPSHOT" unless status.success?
+  return "0.0.1-SNAPSHOT" unless status.success?
   match = /\Av(\d.*)$/.match(output)
-  return "UNKNOWN-SNAPSHOT" unless match
+  return "0.0.1-SNAPSHOT" unless match
   version = match[1]
   output, status = Open3.capture2e("git describe --exact-match --tags HEAD")
   return "#{version}-SNAPSHOT" unless status.success?
