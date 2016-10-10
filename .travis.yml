@@ -2,5 +2,9 @@ language: java
 jdk:
 - openjdk7
 script:
-- ./configure_pom
-- mvn package
+- "./configure_pom"
+- mvn deploy --settings settings.xml
+env:
+  global:
+  - secure: yiCtVh9ujThB42axOXyy2GWQn85T3W9msOK45LSI6FUtl0ebdXwMPXFdCShqO25CY09cq816I1mVsfhhuknqLJvfEUOxPr7wCbmLDIXEi0IABy5pVzVlt2fJpQ/Wn0lC32TuZfab4T2Gpd8TAb64EF3Vmt8QejZIJnx7bb/cYQo=
+  - secure: FDfZxl/YY9giYslflSVlm9AwVvFinZQ2/NrIxw5ITtcYOhj/gdldO/gb54aK2IlrSWzMnGuoId9wCvViAx8+CXHhQY/a6fsK8lrdAw0hWOLPtqIOTm24B5RXThdwrbFHN4XFFBWb39ZaPYlXyQy/tgtx3wwWDkXiHl6XB/ujif4=
