@@ -1,0 +1,8 @@
+#!/usr/bin/env ruby
+
+abort "Usage: ./release <version>" unless ARGV.size == 1
+abort "Invalid version: #{ARGV[0]}" unless ARGV[0] =~ /\A\d+\.\d+\.\d+\z/
+system "git", "tag", "-a", "v#{ARGV[0]}", "-m", "Version #{ARGV[0]}"
+abort "Failed to tag commit" unless $?.success?
+system "git", "push", "origin", "--tags"
+abort "Failed to push tags" unless $?.success?
