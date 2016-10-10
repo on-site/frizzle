@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+require_relative "maven_version"
+
+if maven_version.end_with?("SNAPSHOT")
+  puts "Testing snapshot version"
+  exec "mvn test"
+else
+  puts "Deploying new version"
+  exec "mvn deploy --settings settings.xml"
+end
