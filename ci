@@ -1,0 +1,64 @@
+#!/usr/bin/env ruby
+require "open3"
+
+def maven_version
+  output, status = Open3.capture2e("git describe --abbrev=0 --tags")
+  return "0.0.1-SNAPSHOT" unless status.success?
+  match = /\Av(\d.*)$/.match(output)
+  return "0.0.1-SNAPSHOT" unless match
+  version = match[1]
+  output, status = Open3.capture2e("git describe --exact-match --tags HEAD")
+  return "#{version}-SNAPSHOT" unless status.success?
+  return "#{version}-SNAPSHOT" unless output.strip == "v#{version}"
+  return version
+end
+
+def update_pom_version
+  file = File.expand_path("../pom.xml", __FILE__)
+  contents = File.read(file)
+  abort "#{file} is already versioned!" unless contents.include?("CUSTOM_VERSION")
+  version = maven_version
+  puts "Updating pom to use version: #{version}"
+  File.write(file, contents.gsub("CUSTOM_VERSION", version))
+end
+
+def mvn(command)
+  command = "mvn #{command} -B -V --settings settings.xml"
+  puts "running: #{command}"
+  exec command
+end
+
+def prep
+  update_pom_version
+end
+
+def install
+  mvn "install -DskipTests=true -Dmaven.javadoc.skip=true"
+end
+
+def run
+  if maven_version.end_with?("SNAPSHOT")
+    puts "Testing snapshot version"
+    mvn "test"
+  else
+    puts "Deploying new version"
+    mvn "deploy"
+  end
+end
+
+def usage
+  abort "Usage: ./ci <prep|install|run>"
+end
+
+usage if ARGV.size != 1
+
+case ARGV[0]
+when "prep"
+  prep
+when "install"
+  install
+when "run"
+  run
+else
+  usage
+end
