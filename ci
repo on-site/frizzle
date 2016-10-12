@@ -1,29 +1,40 @@
 #!/usr/bin/env ruby
 require "open3"
 
-def maven_version
+def snapshot_version(version, allow_snapshot)
+  if allow_snapshot
+    "#{version}-SNAPSHOT"
+  else
+    version
+  end
+end
+
+def maven_version(allow_snapshot = true)
   output, status = Open3.capture2e("git describe --abbrev=0 --tags")
-  return "0.0.1-SNAPSHOT" unless status.success?
+  return snapshot_version("0.0.1", allow_snapshot) unless status.success?
   match = /\Av(\d.*)$/.match(output)
-  return "0.0.1-SNAPSHOT" unless match
+  return snapshot_version("0.0.1", allow_snapshot) unless match
   version = match[1]
   output, status = Open3.capture2e("git describe --exact-match --tags HEAD")
-  return "#{version}-SNAPSHOT" unless status.success?
-  return "#{version}-SNAPSHOT" unless output.strip == "v#{version}"
+  return snapshot_version(version, allow_snapshot) unless status.success?
+  return snapshot_version(version, allow_snapshot) unless output.strip == "v#{version}"
   return version
 end
 
 def update_pom_version
-  file = File.expand_path("../pom.xml", __FILE__)
+  file = File.expand_path("pom.xml")
   contents = File.read(file)
   abort "#{file} is already versioned!" unless contents.include?("CUSTOM_VERSION")
   version = maven_version
+  strict_version = maven_version(false)
   puts "Updating pom to use version: #{version}"
-  File.write(file, contents.gsub("CUSTOM_VERSION", version))
+  contents.gsub!("STRICT_CUSTOM_VERSION", strict_version)
+  contents.gsub!("CUSTOM_VERSION", version)
+  File.write(file, contents)
 end
 
 def mvn(command)
-  command = "mvn #{command} -B -V --settings settings.xml"
+  command = "mvn #{command} -B -V --settings '#{File.expand_path("../settings.xml", __FILE__)}'"
   puts "running: #{command}"
   exec command
 end
