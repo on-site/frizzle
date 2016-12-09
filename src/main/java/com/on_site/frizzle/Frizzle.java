@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2014 On-Site.com.
+ * Copyright (c) 2013, 2014, 2016 On-Site.com.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -72,12 +72,11 @@ public class Frizzle {
     public Frizzle(Document doc) {
         try (ContextCloseable cc = new WrappedContextCloseable()) {
             Context cx = cc.getContext();
-            this.toplevel = cx.initStandardObjects();
-            Scriptable window = cx.newObject(toplevel);
-            window.put("document", window, toJS(doc));
-            toplevel.put("window", toplevel, window);
+            this.toplevel = cx.initSafeStandardObjects();
+            toplevel.put("document", toplevel, toJS(doc));
+            toplevel.put("window", toplevel, toplevel);
             SIZZLE_SCRIPT.exec(cx, toplevel);
-            this.sizzle = (Function) window.get("Sizzle", window);
+            this.sizzle = (Function) toplevel.get("Sizzle", toplevel);
         }
     }
 
