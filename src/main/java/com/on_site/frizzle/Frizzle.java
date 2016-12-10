@@ -167,7 +167,7 @@ public class Frizzle {
         try (ContextCloseable cc = new WrappedContextCloseable()) {
             Context cx = cc.getContext();
             return (String) Context.jsToJava(((Function) sizzle.get("getText", sizzle))
-                    .call(cx, toplevel, sizzle, new Object[] {elem}), String.class);
+                    .call(cx, toplevel, sizzle, new Object[] {toJS(elem)}), String.class);
         }
     }
 
@@ -175,7 +175,7 @@ public class Frizzle {
         try (ContextCloseable cc = new WrappedContextCloseable()) {
             Context cx = cc.getContext();
             return (String) Context.jsToJava(((Function) sizzle.get("getText", sizzle))
-                    .call(cx, toplevel, sizzle, new Object[] {elems}), String.class);
+                    .call(cx, toplevel, sizzle, new Object[] {toJS(elems)}), String.class);
         }
     }
 
@@ -190,7 +190,7 @@ public class Frizzle {
             StringBuilder sb = new StringBuilder();
             for (Element elem : elems) {
                 sb.append(Context.jsToJava(((Function) sizzle.get("getText", sizzle))
-                    .call(cx, toplevel, sizzle, new Object[] {elem}), String.class));
+                    .call(cx, toplevel, sizzle, new Object[] {toJS(elem)}), String.class));
             }
             return sb.toString();
         }
@@ -200,7 +200,7 @@ public class Frizzle {
         try (ContextCloseable cc = new WrappedContextCloseable()) {
             Context cx = cc.getContext();
             return (String) Context.jsToJava(((Function) sizzle.get("attr", sizzle))
-                    .call(cx, toplevel, sizzle, new Object[] {elem, name}), String.class);
+                    .call(cx, toplevel, sizzle, new Object[] {toJS(elem), name}), String.class);
         }
     }
 }
